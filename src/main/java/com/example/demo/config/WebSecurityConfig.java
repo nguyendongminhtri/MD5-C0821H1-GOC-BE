@@ -2,7 +2,7 @@ package com.example.demo.config;
 
 import com.example.demo.security.jwt.JwtEntryPoint;
 import com.example.demo.security.jwt.JwtTokenFilter;
-import com.example.demo.security.userprincal.UserDetailService;
+import com.example.demo.security.userprincal.UserDetailServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
-    UserDetailService userDetailService;
+    UserDetailServices userDetailServices;
     @Autowired
     private JwtEntryPoint jwtEntryPoint;
     @Bean
@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailService)
+        authenticationManagerBuilder.userDetailsService(userDetailServices)
                 .passwordEncoder(passwordEncoder());
     }
     @Bean

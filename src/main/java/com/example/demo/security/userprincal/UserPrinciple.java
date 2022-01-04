@@ -45,6 +45,11 @@ public class UserPrinciple implements UserDetails {
                 authorities
         );
     }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
     public String getName() {
         return name;
     }
