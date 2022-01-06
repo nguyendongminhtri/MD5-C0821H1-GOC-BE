@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RequestMapping("category")
@@ -43,4 +44,41 @@ public class CategoryController {
         }
         return new ResponseEntity<>(categoryList, HttpStatus.OK);
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category){
+        Optional<Category> category1 = categoryService.findById(id);
+        if(!category1.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(categoryService.existsByNameCategory(category.getNameCategory())){
+            if(!category.getAvatarCategory().equals(category1.get().getAvatarCategory())){
+                category1.get().setAvatarCategory(category.getAvatarCategory());
+                categoryService.save(category1.get());
+                return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+            }
+            return new ResponseEntity<>(new ResponMessage("no_name_category"), HttpStatus.OK);
+        }
+        category1.get().setNameCategory(category.getNameCategory());
+        category1.get().setAvatarCategory(category.getAvatarCategory());
+        categoryService.save(category1.get());
+        return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> detailCategory(@PathVariable Long id){
+        Optional<Category> category = categoryService.findById(id);
+        if(!category.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(category, HttpStatus.OK);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id){
+        Optional<Category> category = categoryService.findById(id);
+        if(!category.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        categoryService.deleteById(id);
+        return new ResponseEntity<>(new ResponMessage("yes"), HttpStatus.OK);
+    }
+
 }
